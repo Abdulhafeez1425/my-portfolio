@@ -1,0 +1,261 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap');
+@import 'tailwindcss';
+
+@theme {
+  --font-sans: 'Inter', sans-serif;
+  --font-heading: 'Space Grotesk', sans-serif;
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 74px;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  background: #fbfaf8;
+  font-family: 'Inter', sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+button,
+a {
+  -webkit-tap-highlight-color: transparent;
+}
+
+::selection {
+  background: #dcd9ff;
+  color: #10162f;
+}
+
+.section-label {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  color: #5551e7;
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+}
+
+.section-label::before {
+  width: 1.5rem;
+  height: 1px;
+  background: currentColor;
+  content: '';
+}
+
+.section-title {
+  color: #10162f;
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: clamp(2.5rem, 5.5vw, 4.8rem);
+  font-weight: 700;
+  letter-spacing: -0.055em;
+  line-height: 1;
+}
+
+.project-visual {
+  color: #10162f;
+}
+
+.project-indigo {
+  background: #dedcff;
+}
+
+.project-orange {
+  background: #f8d7bd;
+}
+
+.project-pink {
+  background: #f5cfdc;
+}
+
+.project-card {
+  transition:
+    transform 350ms ease,
+    box-shadow 350ms ease;
+}
+
+.project-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 24px 55px rgba(30, 35, 65, 0.11);
+}
+
+.contact-link {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  width: fit-content;
+  color: #5551e7;
+  font-size: 0.82rem;
+  font-weight: 700;
+  transition: color 200ms ease;
+}
+
+.contact-link:hover {
+  color: #10162f;
+}
+
+.contact-link svg {
+  width: 1.1rem;
+  flex: none;
+}
+
+.form-label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+  color: #242b46;
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.form-input {
+  width: 100%;
+  border: 1px solid rgba(16, 22, 47, 0.1);
+  border-radius: 0.85rem;
+  background: #fbfaf8;
+  padding: 0.9rem 1rem;
+  color: #10162f;
+  font-size: 0.875rem;
+  font-weight: 400;
+  outline: none;
+  transition:
+    border-color 200ms ease,
+    box-shadow 200ms ease;
+}
+
+.form-input::placeholder {
+  color: #9a9ca6;
+}
+
+.form-input:focus {
+  border-color: #5551e7;
+  box-shadow: 0 0 0 3px rgba(85, 81, 231, 0.1);
+}
+
+.social-link {
+  display: grid;
+  width: 2.5rem;
+  height: 2.5rem;
+  place-items: center;
+  border: 1px solid rgba(16, 22, 47, 0.1);
+  border-radius: 999px;
+  transition:
+    transform 200ms ease,
+    border-color 200ms ease,
+    color 200ms ease;
+}
+
+.social-link:hover {
+  transform: translateY(-3px);
+  border-color: #5551e7;
+  color: #5551e7;
+}
+
+@keyframes reveal {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-reveal {
+  animation: reveal 700ms ease both;
+}
+
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+@keyframes drift {
+  0%,
+  100% {
+    transform: translateY(0) rotate(-2deg);
+  }
+  50% {
+    transform: translateY(-7px) rotate(-1deg);
+  }
+}
+
+@keyframes glow {
+  0%,
+  100% {
+    opacity: 0.65;
+    transform: scale(0.96);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.05);
+  }
+}
+
+.hero-illustration {
+  animation:
+    reveal 700ms 150ms ease both,
+    float 6s 900ms ease-in-out infinite;
+}
+
+.hero-glow {
+  animation: glow 5s ease-in-out infinite;
+}
+
+.code-window {
+  animation: drift 4.5s ease-in-out infinite;
+}
+
+.project-card {
+  animation: reveal 650ms ease both;
+}
+
+.project-card:nth-child(2) {
+  animation-delay: 80ms;
+}
+
+.project-card:nth-child(3) {
+  animation-delay: 160ms;
+}
+
+.project-card:nth-child(4) {
+  animation-delay: 240ms;
+}
+
+.project-card:nth-child(5) {
+  animation-delay: 320ms;
+}
+
+.project-card:nth-child(6) {
+  animation-delay: 400ms;
+}
+
+.project-card:nth-child(7) {
+  animation-delay: 480ms;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+  }
+}

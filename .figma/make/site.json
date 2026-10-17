@@ -1,0 +1,10 @@
+{
+  "description": "Showcase the work and expertise of Olabisi Abdulhafeez Olatayo, offering a modern portfolio for a Frontend Developer, Educator, and Writer.",
+  "robots": {
+    "index": false
+  },
+  "accessibility": {
+    "addBypassLinks": false,
+    "ignoreReducedMotion": false
+  }
+}
