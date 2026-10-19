@@ -1,4 +1,7 @@
 import { useEffect, useState, type FormEvent } from 'react'
+import ProjectPage from './ProjectPage'
+import { projects } from './projects'
+import profileImage from './assets/profile-img.png'
 
 type IconName = 'arrow' | 'code' | 'external' | 'github' | 'linkedin' | 'mail' | 'pen' | 'people' | 'pin' | 'spark'
 
@@ -20,59 +23,6 @@ function Icon({ name, className = 'size-5' }: { name: IconName; className?: stri
 
 const navItems = ['Home', 'About', 'Projects', 'Community']
 const skills = ['JavaScript', 'Frontend Development', 'Product Research', 'PRD Writing', 'GitHub', 'UI Development', 'Education', 'Writing']
-const projects = [
-  {
-    title: 'NestTrack',
-    category: 'Product Research · PropTech',
-    description: 'A landlord-management platform concept shaped through market research, user needs analysis, and thoughtful PRD development.',
-    tags: ['Market Research', 'PRD', 'JavaScript', 'UI Development'],
-    url: 'https://nest-trackv2.vercel.app/',
-    featured: true,
-  },
-  {
-    title: 'Student Performance Board',
-    category: 'Education',
-    description: 'A clear dashboard for reviewing student outcomes and making performance data easier to understand.',
-    tags: ['JavaScript', 'Data UI', 'Responsive'],
-    url: 'https://student-performance-board-01.netlify.app/',
-  },
-  {
-    title: 'QuickCart Checkout Demo',
-    category: 'E-commerce',
-    description: 'A streamlined checkout experience focused on clarity, speed, and friction-free purchasing.',
-    tags: ['Checkout UX', 'JavaScript', 'Forms'],
-    url: 'https://quickcart-checkout-demo.netlify.app/',
-  },
-  {
-    title: 'Tayo Pocket Ledger',
-    category: 'Fintech',
-    description: 'A lightweight personal ledger for recording everyday income and expenses with confidence.',
-    tags: ['JavaScript', 'Local Storage', 'UI'],
-    url: 'https://tayo-pocket-ledger.netlify.app/',
-  },
-  {
-    title: 'Product Inventory Manager',
-    category: 'Business Tools',
-    description: 'A practical interface for organizing products and keeping inventory information up to date.',
-    tags: ['CRUD', 'JavaScript', 'Responsive'],
-    url: 'https://product-inventory-manager-00.netlify.app/',
-  },
-  {
-    title: 'Daymark',
-    category: 'Productivity',
-    description: 'A calm daily planning experience designed to make priorities visible and progress feel tangible.',
-    tags: ['Product Design', 'Frontend', 'UX'],
-    url: 'https://daymark-tmt.vercel.app/',
-  },
-  {
-    title: 'Hub Website Development',
-    category: 'Open Source · Collaboration',
-    description: 'Contributed a Privacy Policy update, Teams and Projects pages, and a more effective GitHub workflow.',
-    tags: ['GitHub', 'Team Workflow', 'Web Development'],
-    url: 'https://github.com/Abdulhafeez1425',
-  },
-]
-
 export default function App() {
   const [menuOpen, setMenuOpen] = useState(false)
 
@@ -90,30 +40,49 @@ export default function App() {
     window.location.href = `mailto:abdulhafeezolabisi972@gmail.com?subject=${subject}&body=${body}`
   }
 
+  const projectRoute = window.location.pathname.match(/^\/projects\/([^/]+)\/?$/)
+  if (projectRoute) {
+    return <ProjectPage project={projects.find((project) => project.slug === decodeURIComponent(projectRoute[1]))} />
+  }
+
+  const activePage = window.location.pathname.replace(/^\/|\/$/g, '') || 'home'
+  if (!['home', 'about', 'projects', 'community', 'contact'].includes(activePage)) {
+    return (
+      <main className="grid min-h-screen place-items-center px-6 text-center text-[#10162f]">
+        <div>
+          <p className="section-label justify-center">Page not found</p>
+          <h1 className="section-title mt-5">This page isn’t here.</h1>
+          <a className="mt-8 inline-flex rounded-full bg-[#5551e7] px-6 py-3 font-bold text-white" href="/">Back to home</a>
+        </div>
+      </main>
+    )
+  }
+
   return (
     <div className="min-h-screen overflow-hidden bg-[#fbfaf8] text-[#10162f]">
       <a href="#main-content" className="sr-only z-[100] bg-white px-4 py-3 focus:not-sr-only focus:fixed focus:left-4 focus:top-4">Skip to content</a>
       <header className="fixed inset-x-0 top-0 z-50 border-b border-[#111936]/8 bg-[#fbfaf8]/88 backdrop-blur-xl">
         <div className="mx-auto flex h-[74px] max-w-7xl items-center justify-between px-5 sm:px-8 lg:px-12">
-          <a href="#home" className="flex items-center gap-3" aria-label="Abdulhafeez Olabisi — home">
+          <a href="/" className="flex items-center gap-3" aria-label="Abdulhafeez Olabisi — home">
             <span className="grid size-9 place-items-center rounded-xl bg-[#5551e7] font-heading text-sm font-bold text-white shadow-[0_6px_18px_rgba(85,81,231,.25)]">AO</span>
             <span className="font-heading text-[15px] font-bold leading-tight tracking-[-.02em]">Abdulhafeez Olabisi <span className="block text-[11px] font-medium tracking-[.14em] text-[#6b6f80]">PORTFOLIO</span></span>
           </a>
           <nav className="hidden items-center gap-8 md:flex" aria-label="Primary navigation">
-            {navItems.map((item) => <a key={item} href={`#${item.toLowerCase()}`} className="text-sm font-semibold text-[#565a6a] transition-colors hover:text-[#5551e7]">{item}</a>)}
-            <a href="#contact" className="rounded-full bg-[#10162f] px-5 py-2.5 text-sm font-semibold text-white transition hover:-translate-y-0.5 hover:bg-[#5551e7]">Contact</a>
+            {navItems.map((item) => <a key={item} href={item === 'Home' ? '/' : `/${item.toLowerCase()}`} aria-current={activePage === item.toLowerCase() ? 'page' : undefined} className="text-sm font-semibold text-[#565a6a] transition-colors hover:text-[#5551e7]">{item}</a>)}
+            <a href="/contact" aria-current={activePage === 'contact' ? 'page' : undefined} className="rounded-full bg-[#10162f] px-5 py-2.5 text-sm font-semibold text-white transition hover:-translate-y-0.5 hover:bg-[#5551e7]">Contact</a>
           </nav>
           <button type="button" className="grid size-11 place-items-center rounded-xl border border-[#10162f]/10 md:hidden" onClick={() => setMenuOpen(!menuOpen)} aria-expanded={menuOpen} aria-controls="mobile-menu" aria-label={menuOpen ? 'Close menu' : 'Open menu'}>
             <span className="relative block h-4 w-5"><span className={`absolute left-0 top-0 h-0.5 w-5 bg-current transition ${menuOpen ? 'translate-y-[7px] rotate-45' : ''}`} /><span className={`absolute left-0 top-[7px] h-0.5 w-5 bg-current transition ${menuOpen ? 'opacity-0' : ''}`} /><span className={`absolute left-0 top-[14px] h-0.5 w-5 bg-current transition ${menuOpen ? '-translate-y-[7px] -rotate-45' : ''}`} /></span>
           </button>
         </div>
         <div id="mobile-menu" className={`grid overflow-hidden bg-[#fbfaf8] transition-[grid-template-rows] duration-300 md:hidden ${menuOpen ? 'grid-rows-[1fr]' : 'grid-rows-[0fr]'}`}>
-          <nav className="min-h-0" aria-label="Mobile navigation"><div className="flex flex-col gap-1 px-5 pb-5">{[...navItems, 'Contact'].map((item) => <a key={item} href={`#${item.toLowerCase()}`} onClick={() => setMenuOpen(false)} className="rounded-xl px-4 py-3 text-sm font-semibold hover:bg-[#5551e7]/8 hover:text-[#5551e7]">{item}</a>)}</div></nav>
+          <nav className="min-h-0" aria-label="Mobile navigation"><div className="flex flex-col gap-1 px-5 pb-5">{[...navItems, 'Contact'].map((item) => <a key={item} href={item === 'Home' ? '/' : `/${item.toLowerCase()}`} onClick={() => setMenuOpen(false)} className="rounded-xl px-4 py-3 text-sm font-semibold hover:bg-[#5551e7]/8 hover:text-[#5551e7]">{item}</a>)}</div></nav>
         </div>
       </header>
 
       <main id="main-content">
-        <section id="home" className="relative mx-auto grid min-h-[790px] max-w-7xl items-center gap-14 px-5 pb-20 pt-36 sm:px-8 lg:grid-cols-[1.17fr_.83fr] lg:px-12 lg:pt-28">
+        {activePage === 'home' && (
+        <section id="home" className="relative mx-auto grid min-h-175.5 max-w-7xl items-center gap-14 px-5 pb-20 pt-36 sm:px-8 lg:grid-cols-[1.17fr_.83fr] lg:px-12 lg:pt-28">
           <div className="relative z-10 animate-reveal">
             <div className="mb-7 inline-flex items-center gap-2 rounded-full border border-[#5551e7]/15 bg-white px-3.5 py-2 text-xs font-bold text-[#5551e7] shadow-sm"><Icon name="spark" className="size-3.5" />Frontend Developer <span className="text-[#aaa8ce]">•</span> Educator <span className="text-[#aaa8ce]">•</span> Writer</div>
             <p className="mb-4 font-heading text-lg font-semibold text-[#5551e7]">Hello, I’m Abdulhafeez Olabisi.</p>
@@ -121,22 +90,24 @@ export default function App() {
             <p className="mt-7 max-w-2xl text-base leading-8 text-[#616575] sm:text-lg">I turn ideas and user insights into clear product requirements and accessible interfaces—while helping others learn how to build for the web.</p>
             <p className="mt-4 flex items-center gap-2 text-sm font-semibold text-[#494e61]"><Icon name="pin" className="size-4 text-[#5551e7]" />University of Ilorin, Nigeria</p>
             <div className="mt-9 flex flex-wrap gap-4">
-              <a href="#projects" className="group inline-flex items-center gap-3 rounded-full bg-[#5551e7] px-6 py-3.5 text-sm font-bold text-white shadow-[0_12px_30px_rgba(85,81,231,.28)] transition hover:-translate-y-1">View Projects <Icon name="arrow" className="size-4 transition group-hover:translate-x-1" /></a>
-              <a href="#contact" className="inline-flex items-center gap-2 rounded-full border border-[#10162f]/15 bg-white px-6 py-3.5 text-sm font-bold transition hover:-translate-y-1 hover:border-[#5551e7] hover:text-[#5551e7]">Contact Me</a>
+              <a href="/projects" className="group inline-flex items-center gap-3 rounded-full bg-[#5551e7] px-6 py-3.5 text-sm font-bold text-white shadow-[0_12px_30px_rgba(85,81,231,.28)] transition hover:-translate-y-1">View Projects <Icon name="arrow" className="size-4 transition group-hover:translate-x-1" /></a>
+              <a href="/contact" className="inline-flex items-center gap-2 rounded-full border border-[#10162f]/15 bg-white px-6 py-3.5 text-sm font-bold transition hover:-translate-y-1 hover:border-[#5551e7] hover:text-[#5551e7]">Contact Me</a>
             </div>
           </div>
-          <div className="hero-illustration relative mx-auto w-full max-w-[470px] animate-reveal [animation-delay:150ms]">
+          <div className="hero-illustration relative mx-auto w-full max-w-117.5 animate-reveal [animation-delay:150ms]">
             <div className="hero-glow absolute -inset-10 rounded-full bg-[#e4e1ff] blur-3xl" />
-            <div className="relative rotate-[2deg] rounded-[2.2rem] border border-white bg-[#e9e7ff] p-3 shadow-[0_30px_80px_rgba(42,38,110,.17)]">
+            <div className="relative rotate-2 rounded-[2.2rem] border border-white bg-[#e9e7ff] p-3 shadow-[0_30px_80px_rgba(42,38,110,.17)]">
               <div className="relative aspect-[4/4.35] overflow-hidden rounded-[1.65rem] bg-[#5551e7]">
                 <img
-                  src="https://images.unsplash.com/photo-1752952952773-80378cefc23d?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&q=85&w=1000"
-                  alt="Demo portrait placeholder of a software developer in an office"
+                  src={profileImage}
+                  alt="Image of Abdulhafeez Olabisi"
                   className="h-full w-full object-cover object-center"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-[#10162f]/90 via-[#10162f]/5 to-transparent" />
+                <div className="absolute inset-0 bg-linear-to-t from-[#10162f]/90 via-[#10162f]/5 to-transparent" />
                 <div className="absolute left-7 top-7 rounded-full border border-white/20 bg-[#10162f]/45 px-4 py-2 text-[10px] font-bold tracking-widest text-white backdrop-blur-md">
-                  DEMO PHOTO · REPLACE WITH YOURS
+                  <span className="mt-0.5 block text-[10px] font-bold tracking-[.14em] text-white">Abdulhafeez Olabisi</span>
+                  <span className="block text-[6px] font-normal uppercase tracking-[.2em] text-white/60">Frontend Developer</span>
+
                 </div>
                 <div className="absolute inset-x-8 bottom-8 z-10 text-white">
                   <p className="font-heading text-3xl font-bold leading-tight">Ideas, made useful.</p>
@@ -146,7 +117,9 @@ export default function App() {
             </div>
           </div>
         </section>
+        )}
 
+        {activePage === 'about' && (
         <section id="about" className="border-y border-[#10162f]/6 bg-white">
           <div className="mx-auto grid max-w-7xl gap-14 px-5 py-24 sm:px-8 lg:grid-cols-[.8fr_1.2fr] lg:px-12 lg:py-32">
             <div><p className="section-label">01 / About me</p><h2 className="section-title mt-5">Curious about<br />people and <span className="text-[#5551e7]">products.</span></h2></div>
@@ -157,24 +130,30 @@ export default function App() {
             </div>
           </div>
         </section>
+        )}
 
+        {activePage === 'projects' && (
         <section id="projects" className="mx-auto max-w-7xl px-5 py-24 sm:px-8 lg:px-12 lg:py-32">
           <div className="flex flex-col justify-between gap-6 sm:flex-row sm:items-end"><div><p className="section-label">02 / Selected projects</p><h2 className="section-title mt-5">Built with intention.</h2></div><p className="max-w-sm text-sm leading-6 text-[#6b6f80]">Frontend experiments and product work that turn practical ideas into usable experiences.</p></div>
           <div className="mt-14 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
-            {projects.map((project, index) => (
+            {projects.map((project) => (
               <article key={project.title} className={`project-card group flex flex-col overflow-hidden rounded-[1.75rem] border border-[#10162f]/7 bg-white shadow-[0_12px_35px_rgba(30,35,65,.05)] ${project.featured ? 'md:col-span-2 lg:col-span-2 lg:grid lg:grid-cols-[1.08fr_.92fr]' : ''}`}>
-                {project.featured && <div className="project-indigo relative min-h-[300px] overflow-hidden p-6 sm:min-h-[370px]"><span className="absolute left-6 top-6 rounded-full bg-white/80 px-3 py-1.5 text-[10px] font-bold uppercase tracking-[.14em]">Featured project</span><div className="absolute -bottom-3 left-7 right-[-3rem] overflow-hidden rounded-t-2xl border-[7px] border-[#242b46] border-b-0 bg-white shadow-2xl"><div className="flex h-9 items-center gap-1.5 bg-[#242b46] px-3"><i className="size-1.5 rounded-full bg-red-300" /><i className="size-1.5 rounded-full bg-amber-300" /><i className="size-1.5 rounded-full bg-emerald-300" /><span className="ml-4 rounded-full bg-white/10 px-12 py-1 text-[8px] text-white/40">nest-trackv2.vercel.app</span></div><div className="grid h-60 grid-cols-[.32fr_1fr] gap-4 p-4"><div className="rounded-xl bg-[#f0efff] p-3"><b className="text-xs text-[#5551e7]">NestTrack</b><div className="mt-6 space-y-3">{[1,2,3,4].map(n => <span key={n} className="block h-2 rounded bg-[#5551e7]/15" />)}</div></div><div><span className="block h-4 w-32 rounded bg-[#171d3a]/80" /><div className="mt-5 grid grid-cols-3 gap-2">{[1,2,3].map(n => <span key={n} className="h-20 rounded-xl bg-[#f7f3ef]" />)}</div><span className="mt-4 block h-16 rounded-xl bg-[#dedcff]" /></div></div></div></div>}
+                <div className={`project-visual relative aspect-[1.65] overflow-hidden ${project.featured ? 'lg:aspect-auto lg:min-h-[370px]' : ''} ${project.image ? 'bg-white' : 'bg-gradient-to-br from-[#dedcff] via-[#f3f1ff] to-[#c9c6ff]'}`}>
+                  {project.image ? <img src={project.image} alt={`${project.title} interface preview`} className="h-full w-full object-cover object-top transition duration-500 group-hover:scale-[1.02]" /> : <div className="absolute inset-x-6 bottom-0 rounded-t-2xl border-x-[6px] border-t-[6px] border-[#242b46] bg-white p-5 shadow-xl sm:inset-x-10 sm:p-7"><span className="text-[10px] font-bold uppercase tracking-[.14em] text-[#5551e7]">{project.category}</span><p className="mt-3 font-heading text-xl font-bold sm:text-2xl">{project.title}</p><div className="mt-5 grid grid-cols-3 gap-2">{[1,2,3].map((item) => <span key={item} className="h-12 rounded-lg bg-[#5551e7]/10" />)}</div></div>}
+                  {project.featured && <span className="absolute left-6 top-6 rounded-full bg-white/85 px-3 py-1.5 text-[10px] font-bold uppercase tracking-[.14em]">Featured project</span>}
+                </div>
                 <div className={`flex flex-1 flex-col p-7 ${project.featured ? 'justify-center sm:p-9' : ''}`}>
-                  {!project.featured && <div className={`mb-7 grid size-12 place-items-center rounded-2xl ${index % 3 === 1 ? 'bg-[#fff0e5] text-[#d87946]' : index % 3 === 2 ? 'bg-[#fceaf0] text-[#bd5275]' : 'bg-[#eeedff] text-[#5551e7]'}`}><Icon name={index === 6 ? 'github' : index % 2 ? 'code' : 'spark'} /></div>}
                   <p className="text-[10px] font-bold uppercase tracking-[.15em] text-[#777a89]">{project.category}</p><h3 className="mt-3 font-heading text-2xl font-bold tracking-[-.03em]">{project.title}</h3><p className="mt-3 text-sm leading-6 text-[#6b6f80]">{project.description}</p>
                   <div className="mt-5 flex flex-wrap gap-2">{project.tags.map(tag => <span key={tag} className="rounded-full bg-[#f4f3f0] px-3 py-1.5 text-[10px] font-bold text-[#626675]">{tag}</span>)}</div>
-                  <a href={project.url} target="_blank" rel="noreferrer" className="mt-7 inline-flex w-fit items-center gap-2 text-sm font-bold text-[#5551e7] transition hover:gap-3" aria-label={`Visit ${project.title} (opens in a new tab)`}>View project <Icon name="external" className="size-4" /></a>
+                  <a href={`/projects/${project.slug}`} className="mt-7 inline-flex w-fit items-center gap-2 text-sm font-bold text-[#5551e7] transition hover:gap-3" aria-label={`Read about ${project.title}`}>View case study <Icon name="arrow" className="size-4" /></a>
                 </div>
               </article>
             ))}
           </div>
         </section>
+        )}
 
+        {activePage === 'community' && (
         <section id="community" className="bg-[#121831] text-white">
           <div className="mx-auto max-w-7xl px-5 py-24 sm:px-8 lg:px-12 lg:py-32">
             <div className="grid gap-10 lg:grid-cols-[.75fr_1.25fr]"><div><p className="section-label !text-[#aaa7ff]">03 / Community</p><h2 className="section-title mt-5 !text-white">Learning<br />in public.</h2><p className="mt-7 max-w-md leading-8 text-white/60">Meaningful technology grows from participation, shared knowledge, and strong local communities.</p></div>
@@ -185,7 +164,9 @@ export default function App() {
             </div>
           </div>
         </section>
+        )}
 
+        {activePage === 'contact' && (
         <section id="contact" className="relative overflow-hidden">
           <div className="absolute -left-32 top-0 size-80 rounded-full bg-[#e9e7ff] blur-3xl" />
           <div className="relative mx-auto grid max-w-7xl gap-14 px-5 py-24 sm:px-8 lg:grid-cols-[.8fr_1.2fr] lg:px-12 lg:py-32">
@@ -205,6 +186,7 @@ export default function App() {
             </form>
           </div>
         </section>
+        )}
       </main>
 
       <footer className="border-t border-[#10162f]/8 bg-white"><div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-6 px-5 py-8 text-center sm:px-8 md:flex-row md:text-left lg:px-12"><div><p className="font-heading text-sm font-bold">Abdulhafeez Olabisi</p><p className="mt-1 text-xs text-[#858894]">Frontend Developer · Educator · Writer</p></div><div className="flex gap-3"><a href="https://github.com/Abdulhafeez1425" target="_blank" rel="noreferrer" aria-label="GitHub profile" className="social-link"><Icon name="github" className="size-4" /></a><a href="https://www.linkedin.com/in/abdulhafeez-olabisi-07241a244" target="_blank" rel="noreferrer" aria-label="LinkedIn profile" className="social-link"><Icon name="linkedin" className="size-4" /></a><a href="mailto:abdulhafeezolabisi972@gmail.com" aria-label="Email Abdulhafeez Olabisi" className="social-link"><Icon name="mail" className="size-4" /></a></div><p className="text-xs text-[#858894]">© {new Date().getFullYear()} Abdulhafeez Olabisi</p></div></footer>
